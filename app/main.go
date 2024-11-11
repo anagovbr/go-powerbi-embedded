@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"sync"
+	"text/template"
 	"time"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -16,7 +17,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 )
 
-//go:embed static index.html
+//go:embed static index.html embed.html
 var files embed.FS
 
 // Retorno da API do Power BI
@@ -89,11 +90,10 @@ func main() {
 	httpClient := &http.Client{Timeout: 30 * time.Second}
 	entraIdService := &EntraIdService{}
 	mux := http.NewServeMux()
-	mux.Handle("GET /", http.FileServer(http.FS(files)))
-
-	mux.HandleFunc("GET /getembedinfo/{workspace}/{report}", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-
+	mux.Handle("GET /", http.FileServerFS(files))
+	mux.HandleFunc("GET /w/{workspace}/r/{report}", func(w http.ResponseWriter, r *http.Request) {
+		// w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "text/html")
 		token, err := entraIdService.getAccessToken(r.Context())
 		if err != nil {
 			log.Fatalf("failed to get a token: %v", err)
@@ -157,10 +157,18 @@ func main() {
 			TokenExpiry: embedToken.Expiration,
 			EmbedURL:    report.EmbedURL,
 		}
-
-		if err := json.NewEncoder(w).Encode(embedData); err != nil {
+		_ = embedData
+		templ, err := template.ParseFS(files, "embed.html")
+		if err != nil {
+			log.Fatalf("failed to parse the template: %v", err)
+		}
+		if err := templ.Execute(w, embedData); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
+
+		// if err := json.NewEncoder(w).Encode(embedData); err != nil {
+		// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+		// }
 	})
 
 	err := http.ListenAndServe(":8080", mux)
