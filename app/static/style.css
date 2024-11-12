@@ -1,0 +1,30 @@
+.bi {
+  vertical-align: -0.125em;
+  fill: currentColor;
+}
+
+.bd-mode-toggle {
+  z-index: 1500;
+}
+
+.bd-mode-toggle .dropdown-menu .active .bi {
+  display: block !important;
+}
+
+main > .container {
+  padding: 60px 15px 0;
+}
+
+div#report-container {
+  height: calc(0.5625 * 80vw); /* 16:9 aspect ratio */
+}
+
+@media only screen and (max-width: 575px) {
+  div#report-container {
+      height: calc(0.5625 * 100vw); /* 16:9 aspect ratio */
+  }
+}
+
+iframe {
+  border: none;
+}

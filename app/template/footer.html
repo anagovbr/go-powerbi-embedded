@@ -22,10 +22,6 @@
             tokenType: models.TokenType.Embed,
             accessToken: "{{.AccessToken}}",
             embedUrl: "{{.EmbedURL}}",
-            // Enable this setting to remove gray shoulders from embedded report
-            // settings: {
-            //     background: models.BackgroundType.Transparent
-            // }
         };
 
         var report = powerbi.embed(reportContainer, reportLoadConfig);

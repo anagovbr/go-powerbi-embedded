@@ -17,7 +17,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 )
 
-//go:embed static template
+//go:embed static template embed.html
 var files embed.FS
 
 // Retorno da API do Power BI
