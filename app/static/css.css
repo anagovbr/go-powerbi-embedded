@@ -1,0 +1,16 @@
+.bi {
+  vertical-align: -0.125em;
+  fill: currentColor;
+}
+
+.bd-mode-toggle {
+  z-index: 1500;
+}
+
+.bd-mode-toggle .dropdown-menu .active .bi {
+  display: block !important;
+}
+
+main > .container {
+  padding: 70px 15px 0;
+}

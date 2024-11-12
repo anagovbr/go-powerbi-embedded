@@ -1,0 +1,23 @@
+{{ template "header" . }}
+    <main class="flex-shrink-0">
+        <div class="container my-5">
+            <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+                <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
+                    <h1 class="display-4 fw-bold lh-1 text-body-emphasis">Power BI Embedded</h1>
+                    <p class="lead">Este é um exemplo desenvolvido em Go para demonstrar como incorporar um painel Power
+                        BI em uma aplicação web.</p>
+                    <p>Para incorporar um painel a esta página basta adicionar à
+                        URL:<br><code>/w/{id do workspace}/r/{id do relatório}</code>.</p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+                        <a href="/w/9F4CDC97-E992-4A40-ADDD-2FD8DE8C80B3/r/4DC19779-D947-49F9-83C4-C878079E2707">
+                        <button type="button" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">Metadados do Synapse</button>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
+                    <img class="rounded-lg-3" src="/static/dashboards.webp" alt="" width="720">
+                </div>
+            </div>
+        </div>
+    </main>
+{{ template "footer" . }}

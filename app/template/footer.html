@@ -1,0 +1,58 @@
+{{ define "footer" }}
+<footer class="footer mt-auto py-3 bg-body-tertiary">
+    <div class="container">
+        <span class="text-body-secondary">O código da aplicação está disponível em <a
+                href="https://github.com/anagovbr/go-powerbi-embedded">https://github.com/anagovbr/go-powerbi-embedded</a>.</span>
+    </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+{{ if .EmbedURL}}
+<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/powerbi-client/2.23.1/powerbi.min.js" integrity="sha512-30PYMgFkaF5Ir4s3i+/APAhp5aUi9nXKFSgOMPQ3LttPyYp79CzUaP7lvYGh6fKpOCBCOoD/RKoJtY5Iv8HT4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(function () {
+        var reportContainer = $("#report-container").get(0);
+
+        // Initialize iframe for embedding report
+        powerbi.bootstrap(reportContainer, { type: "report" });
+
+        var models = window["powerbi-client"].models;
+        var reportLoadConfig = {
+            type: "report",
+            tokenType: models.TokenType.Embed,
+            accessToken: "{{.AccessToken}}",
+            embedUrl: "{{.EmbedURL}}",
+            // Enable this setting to remove gray shoulders from embedded report
+            // settings: {
+            //     background: models.BackgroundType.Transparent
+            // }
+        };
+
+        var report = powerbi.embed(reportContainer, reportLoadConfig);
+
+        // Triggers when a report schema is successfully loaded
+        report.on("loaded", function () {
+            console.log("Report load successful")
+        });
+
+        // Triggers when a report is successfully embedded in UI
+        report.on("rendered", function () {
+            console.log("Report render successful")
+        });
+
+        // Clear any other error handler event
+        report.off("error");
+
+        // Below patch of code is for handling errors that occur during embedding
+        report.on("error", function (event) {
+            var errorMsg = event.detail;
+            // Use errorMsg variable to log error in any destination of choice
+            console.error(errorMsg);
+            return;
+        });
+    });
+</script>
+{{ end }}
+</body>
+</html>
+{{ end }}
