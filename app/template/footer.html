@@ -6,7 +6,7 @@
     </div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-{{ if .EmbedURL}}
+{{ if and .EmbedData.AccessToken .EmbedData.EmbedURL }}
 <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/powerbi-client/2.23.1/powerbi.min.js" integrity="sha512-30PYMgFkaF5Ir4s3i+/APAhp5aUi9nXKFSgOMPQ3LttPyYp79CzUaP7lvYGh6fKpOCBCOoD/RKoJtY5Iv8HT4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
@@ -20,8 +20,8 @@
         var reportLoadConfig = {
             type: "report",
             tokenType: models.TokenType.Embed,
-            accessToken: "{{.AccessToken}}",
-            embedUrl: "{{.EmbedURL}}",
+            accessToken: "{{.EmbedData.AccessToken}}",
+            embedUrl: "{{.EmbedData.EmbedURL}}",
         };
 
         var report = powerbi.embed(reportContainer, reportLoadConfig);
@@ -47,6 +47,31 @@
             return;
         });
     });
+</script>
+{{ else if .Error }}
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <svg class="bd-placeholder-img rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#007aff"/></svg>
+      <strong class="me-auto">Error</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      <p>{{ .Error }}</p>
+      <p>Verifique a URL (workspace id/report id) ou atualize a página.</p>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var toastEl = document.getElementById('liveToast');
+    if (toastEl) {
+      var toast = new bootstrap.Toast(toastEl, {
+        autohide: false
+      });
+      toast.show();
+    }
+  });
 </script>
 {{ end }}
 </body>
